@@ -1,12 +1,19 @@
 from fastapi import FastAPI
 from app.database import engine, BASE
-from app.models import student, place, course, category
+from fastapi.middleware.cors import CORSMiddleware
 from app.routers import student_router, master_router
 
 app = FastAPI()
 
-# create tables automatically
-BASE.metadata.create_all(bind=engine)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+BASE.metadata.create_all(bind=engine) # create tables automatically
 
 app.include_router(student_router.router)
 app.include_router(master_router.router)
